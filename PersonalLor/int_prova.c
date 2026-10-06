@@ -21,13 +21,13 @@ int main(int argc, char *argv[]) {
     double a = 0;
     FILE *fp;
     fp = fopen("FreeFall.dat", "w+");
-    fprintf(fp, "x(t) v(t)\n");
+    fprintf(fp, "\"x(t)\",\"v(t)\"\n");
 
     for (int i = 0; i < N; i++) {
         a = 9.81;
         v += a*dt;
         x += v*dt;
-        fprintf(fp, "%f %f\n", x, v);
+        fprintf(fp, "%f,%f\n", x, v);
     }
 
     fclose(fp);

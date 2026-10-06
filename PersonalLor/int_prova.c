@@ -23,6 +23,7 @@ int main(int argc, char *argv[]) {
     fp = fopen("FreeFall.dat", "w+");
     fprintf(fp, "\"x(t)\",\"v(t)\"\n");
 
+    //Integrazione
     for (int i = 0; i < N; i++) {
         a = 9.81;
         v += a*dt;

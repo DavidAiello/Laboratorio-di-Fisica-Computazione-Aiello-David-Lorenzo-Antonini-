@@ -209,7 +209,7 @@ void rk4(Vector *p, System *s, f derivata){
 
   //Aggiornamento finale
   p->x += ( 1 / 6.0 ) * (K[0].x + 2*K[1].x + 2*K[2].x + K[3].x);
-  p->v += ( 1 / 6.0) *  (K[0].v + 2*K[1].v + 2*K[2].v + 2*K[3].v);
+  p->v += ( 1 / 6.0) *  (K[0].v + 2*K[1].v + 2*K[2].v + K[3].v);
 }
 
 double energia(Vector *p, System *s, potenziale pot){

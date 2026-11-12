@@ -1,0 +1,66 @@
+import matplotlib.pyplot as plt
+import numpy as np
+from math import atan, cos, sin, sqrt
+t_e, x_e, v_e, E_e = np.loadtxt("eulero.dat",unpack = True)
+t_c, x_c, v_c, E_c = np.loadtxt("eulero_cromer.dat",unpack = True)
+t_v, x_v, v_v, E_v = np.loadtxt("verlet.dat",unpack = True)
+t_4, x_4, v_4, E_4 = np.loadtxt("rk4.dat",unpack = True)
+t_2, x_2, v_2, E_2 = np.loadtxt("rk2.dat",unpack = True)
+
+fig, axes = plt.subplots(3, 1)#, figsize=(6, 4))
+
+zero_cross_v = []
+for tn,theta_n, theta_n1 in zip(t_v, x_v, x_v[1:]):
+    if(theta_n * theta_n1 < 0):
+        zero_cross_v.append(tn)
+period_v = [(-tn + tn1) * 2 for tn, tn1 in zip(zero_cross_v,zero_cross_v[1:])]
+
+zero_cross_4 = []
+for tn,theta_n, theta_n1 in zip(t_4, x_4, x_4[1:]):
+    if(theta_n * theta_n1 < 0):
+        zero_cross_4.append(tn)
+period_4 = [(-tn + tn1) * 2 for tn, tn1 in zip(zero_cross_4,zero_cross_4[1:])]
+
+
+print(len(period_v), len(period_4))
+print(f'Periodo verlet primi 100 {np.mean(period_v[:100]):.5f} ultimi 100 {np.mean(period_v[-100:]):.5f}')
+print(f"Periodo runge_kutta primi 100 {np.mean(period_4[:100]):.5f} ultimi 100 {np.mean(period_4[-100:]):.5f}")
+
+#Traiettorie
+axes[0].plot(t_4, x_4, 'o', label="Traiettoria runge_kutta 4")
+# axes[0].plot(t_2, x_2, 'o',label = 'Traiettoria runge kutta 2')
+# axes[0].plot(t_e, x_e, 'o', label="Traiettoria eulero")
+# axes[0].plot(t_c, x_c, 'o',label = 'Traiettoria eulero_cromer')
+axes[0].plot(t_v, x_v, 'o', label="Traiettoria velocity verlet")
+axes[0].set_ylabel(r"x / $\mathrm{m}$")
+axes[0].set_xlabel(r"t / $\mathrm{s}$")
+axes[0].legend()
+axes[0].grid()
+
+# Spazio delle fasi
+axes[1].plot(x_4,v_4, 'o', label = 'Spazio fasi runge kutta 4')
+# axes[1].plot(x_2, v_2, 'o', label = 'Spazio fasi runge kutta 2')
+# axes[1].plot(x_e, v_e, 'o', label="Spazio fasi eulero")
+# axes[1].plot(x_c, v_c, 'o',label = 'Spazio fasi eulero_cromer')
+axes[1].plot(x_v, v_v, 'o', label="Spazio fasi velocity verlet")
+axes[1].set_ylabel(r"v(t) / $\mathrm{m/s}$")
+axes[1].set_xlabel(r"x(t) / $\mathrm{m}$")
+axes[1].legend()
+axes[1].grid()
+
+
+#Energia
+axes[2].plot(t_4,E_4, 'o',label = 'Energia runge kutta 4')
+# axes[2].plot(t_2, E_2, 'o',label = 'Energia runge kutta 2')
+# axes[2].plot(t_e, E_e, 'o', label="Energia eulero")
+# axes[2].plot(t_c, E_c, 'o',label = 'Energia eulero_cromer')
+axes[2].plot(t_v, E_v, 'o', label="Energia velocity verlet")
+axes[2].set_ylabel(r"E(t) / $\mathrm{N \cdot m}$")
+axes[2].set_xlabel(r"t / $\mathrm{s}$")
+axes[2].legend()
+axes[2].grid()
+
+fig.tight_layout()
+plt.title("Confronto vari metodi di integrazione",fontsize = 15)
+plt.savefig("pendolo.png")
+plt.show()
